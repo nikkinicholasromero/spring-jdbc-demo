@@ -14,6 +14,8 @@ import java.util.Map;
 public class EmployeeRepository {
     private static final String FIND_ALL = "SELECT * FROM EMPLOYEES";
     private static final String FIND_BY_ID = "SELECT * FROM EMPLOYEES WHERE ID = :ID";
+    private static final String INSERT = "INSERT INTO EMPLOYEES (ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, SALARY, SOME_DATE, SOME_TIME, SOME_DATETIME, ACTIVE) " +
+        " VALUES (:ID, :FIRST_NAME, :MIDDLE_NAME, :LAST_NAME, :SALARY, :SOME_DATE, :SOME_TIME, :SOME_DATETIME, :ACTIVE)";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -26,8 +28,22 @@ public class EmployeeRepository {
     }
 
     public Employee findById(String id) {
-        Map<String, String> namedparam = new HashMap<>();
-        namedparam.put("ID", id);
-        return jdbcTemplate.query(FIND_BY_ID, namedparam, employeeMapper).get(0);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("ID", id);
+        return jdbcTemplate.query(FIND_BY_ID, parameters, employeeMapper).get(0);
+    }
+
+    public void save(Employee employee) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("ID", employee.getId());
+        parameters.put("FIRST_NAME", employee.getFirstName());
+        parameters.put("MIDDLE_NAME", employee.getMiddleName());
+        parameters.put("LAST_NAME", employee.getLastName());
+        parameters.put("SALARY", employee.getSalary());
+        parameters.put("SOME_DATE", employee.getSomeDate());
+        parameters.put("SOME_TIME", employee.getSomeTime());
+        parameters.put("SOME_DATETIME", employee.getSomeDatetime());
+        parameters.put("ACTIVE", employee.isActive());
+        jdbcTemplate.update(INSERT, parameters);
     }
 }
