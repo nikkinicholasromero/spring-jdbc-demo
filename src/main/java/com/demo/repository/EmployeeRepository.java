@@ -18,6 +18,7 @@ public class EmployeeRepository {
         " VALUES (:ID, :FIRST_NAME, :MIDDLE_NAME, :LAST_NAME, :SALARY, :SOME_DATE, :SOME_TIME, :SOME_DATETIME, :ACTIVE)";
     private static final String UPDATE = "UPDATE EMPLOYEES SET FIRST_NAME = :FIRST_NAME, MIDDLE_NAME = :MIDDLE_NAME, LAST_NAME = :LAST_NAME, " + 
         "SALARY = :SALARY, SOME_DATE = :SOME_DATE, SOME_TIME = :SOME_TIME, SOME_DATETIME = :SOME_DATETIME, ACTIVE = :ACTIVE WHERE ID = :ID";
+    private static final String DELETE = "DELETE FROM EMPLOYEES WHERE ID = :ID";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -30,9 +31,7 @@ public class EmployeeRepository {
     }
 
     public Employee findById(String id) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("ID", id);
-        return jdbcTemplate.query(FIND_BY_ID, parameters, employeeMapper).get(0);
+        return jdbcTemplate.query(FIND_BY_ID, toParameter(id), employeeMapper).get(0);
     }
 
     public void save(Employee employee) {
@@ -41,6 +40,10 @@ public class EmployeeRepository {
 
     public void update(Employee employee) {
         jdbcTemplate.update(UPDATE, toParameter(employee));
+    }
+
+    public void delete(String id) {
+        jdbcTemplate.update(DELETE, toParameter(id));
     }
 
     private Map<String, Object> toParameter(Employee employee) {
@@ -54,6 +57,12 @@ public class EmployeeRepository {
         parameters.put("SOME_TIME", employee.getSomeTime());
         parameters.put("SOME_DATETIME", employee.getSomeDatetime());
         parameters.put("ACTIVE", employee.isActive());
+        return parameters;
+    }
+
+    private Map<String, Object> toParameter(String id) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("ID", id);
         return parameters;
     }
 }

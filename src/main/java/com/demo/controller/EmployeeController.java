@@ -4,6 +4,7 @@ import com.demo.model.Employee;
 import com.demo.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,5 +42,11 @@ public class EmployeeController {
     @ResponseStatus(value = HttpStatus.OK)
     public void update(@RequestBody Employee employee) {
         employeeService.update(employee);
+    }
+
+    @DeleteMapping({"employee/{id}", "employee/{id}/"})
+    @ResponseStatus(value = HttpStatus.OK)
+    public void delete(@PathVariable("id") String id) {
+        employeeService.delete(id);
     }
 }

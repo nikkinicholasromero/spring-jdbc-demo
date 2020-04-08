@@ -27,4 +27,8 @@ public class EmployeeService {
     public void update(Employee employee) {
         employeeRepository.update(employee);
     }
+
+    public void delete(String id) {
+        employeeRepository.delete(id);
+    }
 }
