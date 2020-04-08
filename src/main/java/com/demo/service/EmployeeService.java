@@ -23,4 +23,8 @@ public class EmployeeService {
     public void save(Employee employee) {
         employeeRepository.save(employee);
     }
+
+    public void update(Employee employee) {
+        employeeRepository.update(employee);
+    }
 }

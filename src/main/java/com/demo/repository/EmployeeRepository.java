@@ -16,6 +16,8 @@ public class EmployeeRepository {
     private static final String FIND_BY_ID = "SELECT * FROM EMPLOYEES WHERE ID = :ID";
     private static final String INSERT = "INSERT INTO EMPLOYEES (ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, SALARY, SOME_DATE, SOME_TIME, SOME_DATETIME, ACTIVE) " +
         " VALUES (:ID, :FIRST_NAME, :MIDDLE_NAME, :LAST_NAME, :SALARY, :SOME_DATE, :SOME_TIME, :SOME_DATETIME, :ACTIVE)";
+    private static final String UPDATE = "UPDATE EMPLOYEES SET FIRST_NAME = :FIRST_NAME, MIDDLE_NAME = :MIDDLE_NAME, LAST_NAME = :LAST_NAME, " + 
+        "SALARY = :SALARY, SOME_DATE = :SOME_DATE, SOME_TIME = :SOME_TIME, SOME_DATETIME = :SOME_DATETIME, ACTIVE = :ACTIVE WHERE ID = :ID";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -34,6 +36,14 @@ public class EmployeeRepository {
     }
 
     public void save(Employee employee) {
+        jdbcTemplate.update(INSERT, toParameter(employee));
+    }
+
+    public void update(Employee employee) {
+        jdbcTemplate.update(UPDATE, toParameter(employee));
+    }
+
+    private Map<String, Object> toParameter(Employee employee) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("ID", employee.getId());
         parameters.put("FIRST_NAME", employee.getFirstName());
@@ -44,6 +54,6 @@ public class EmployeeRepository {
         parameters.put("SOME_TIME", employee.getSomeTime());
         parameters.put("SOME_DATETIME", employee.getSomeDatetime());
         parameters.put("ACTIVE", employee.isActive());
-        jdbcTemplate.update(INSERT, parameters);
+        return parameters;
     }
 }
